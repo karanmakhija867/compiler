@@ -1,0 +1,127 @@
+//start $$ mainFunction DOLLAR @ { start.addr = newNode(start,mainFunction.addr)}
+
+//mainFunction $$ MAIN SQO SQC stmtsAndFunctionDefs END @ {mainFunction.addr = stmtsAndFunctionDefs.addr}
+
+//stmtsAndFunctionDefs $$ stmtOrFunctionDef moreStmtsAndFunctionDefs @ {stmtOrFunctionDef.link = moreStmtsAndFunctionDefs.addr, stmtsAndFunctionDefs.addr = stmtOrFunctionDef.addr }
+
+//moreStmtsAndFunctionDefs $$ stmtOrFunctionDef moreStmtsAndFunctionDefs1 @ { stmtOrFunctionDef.link = moreStmtsAndFunctionDefs1.addr, moreStmtsAndFuctionDefs.addr = stmtOrFunctionDef.addr}
+
+//moreStmtsAndFunctionDefs $$ EPSILON @ { moreStmtsAndFunctionDefs.addr = NULL}
+
+//stmtOrFunctionDef $$ stmt @ {stmtOrFunctionDef.addr = stmt.addr}
+//stmtOrFunctionDef $$ functionDef @ {stmtOrFunctionDef.addr = functionDef.addr}
+//stmt $$ declarationStmt SEMICOLON @ { stmt.addr = declarationStmt.addr)}
+//stmt $$ assignmentStmtType1 SEMICOLON @ { stmt.addr = assignmentStmtType1.addr}
+//stmt $$ assignmentStmtType2 SEMICOLON @ { stmt.addr = assignmentStmtType2.addr}
+//stmt $$ ifStmt SEMICOLON @ {stmt.addr = ifStmt.addr}
+//stmt $$ ioStmt SEMICOLON @ {stmt.addr = ioStmt.addr}
+//stmt $$ funCallStmt SEMICOLON @ {stmt.addr = funCallStmt.addr}
+
+//functionDef $$ FUNCTION SQO parameterList1 SQC ASSIGNOP FUNID SQO parameterList2 SQC stmtsAndFunctionDefs END SEMICOLON @ {functionDef.addr = newNode(function,parameterList1.addr, FUNID.addr,ASSIGNOP.addr, parameterList2.addr,stmtsAndFunctionDefs.addr,END.addr)}
+
+//type $$ INT @ {type.addr = INT.addr}
+//type $$ REAL @ {type.addr = REAL.addr}
+//type $$ STRING @ {type.addr = STRING.addr}
+//type $$ MATRIX @ {type.addr = MATRIX.addr}
+
+//parameterList $$ type ID remainingList @ {parameterList.addr = newNode(parameter, type.addr, ID.addr, remainingList.addr)}
+//remainingList $$ COMMA type ID remainingList1 @ {remainingList.addr = type.addr type.link= ID.addr ID.link=remainingList1.addr}
+//remainingList $$ EPSILON @ {remainingList.addr = NULL}
+
+//declarationStmt $$ type varList @ {declarationStmt.addr = newNode(declare, type.addr, varList.addr)}
+//varList $$ ID moreIds @ {varList.addr = newNode(varlist,ID.addr,moreIds.addr) }
+//moreIds $$ COMMA ID moreIds1 @ {ID.link = moreIds1.addr, moreIds.addr = ID.addr}
+//moreIds $$ EPSILON @ {moreIds.addr = NULL}
+
+//assginmentStmtType1 $$ leftHandSideSingleVar ASSIGNOP rightHandSideType1 @ {assignmentType1.addr = newNode(assigment1,leftHandSideSingleVar.addr, ASSIGNOP.addr,rightHandSideType1.addr)}
+//assginmentStmtType2 $$ leftHandSideListVar ASSIGNOP rightHandSideType2 @ {assignmentType2.addr = newNode(assigment2,leftHandSideSingleVar.addr, ASSIGNOP.addr,rightHandSideType2.addr)}
+
+//leftHandSideSingleVar $$ ID @ {leftHandSideSingleVar.addr = ID.addr}
+//leftHandSideListVar $$ SQO varList SQC @ {leftHandSideListVar.addr = varList.addr}
+
+//rightHandSideType1 $$ arithmeticExpression @ {rightHandSideType1.addr = arithmeticExpression.addr}
+//rightHandSideType1 $$ sizeExpression @ {rightHandSideType1.addr = sizeExpression.addr}
+//rightHandSideType1 $$ funCallStmt @ {rightHandSideType1.addr = funCallStmt.addr}
+//rightHandSideType2 $$ sizeExpression @ {rightHandSideType2.addr = sizeExpression.addr}
+//rightHandSideType2 $$ funCallStmt @ {rightHandSideType2.addr = funCallStmt.addr}
+
+//sizeExpression $$ SIZE ID @ {sizeExpression.addr = sizeExpression.addr = SIZE.addr SIZE.link=ID.addr)}
+
+//arithmeticExpression $$ arithmeticTerm remainArithmeticExpression @ {arithmeticExpression.addr = newNode(arithexp,arithmeticTerm.addr,remainArithmeticExpression.addr)}
+//remainArithmeticExpression $$ operatorLowPrecedence arithmeticTerm remainArithmeticExpression1 @ {remainArithmeticExpression.addr = operatorLowPrecedence.addr, operatorLowPrecedence.link = arithmeticTerm.addr arithmeticTerm.link = remainArithmeticExpression1.addr}
+//remainArithmeticExpression $$ EPSILON @ {remainArithmeticExpression.addr = NULL}
+
+//arithmeticTerm $$ arithmeticFactor remainArithmeticTerm @ {arithmeticTerm.addr = newNode(arithexpwithoutlow,arithmeticFactor.addr,remainArithmeticTerm.addr)}
+
+//remainArithmeticTerm $$ operatorHighPrecedence arithmeticFactor remainArithmeticTerm @ {remainArithmeticTerm.addr = operatorHighPrecedence.addr, operatorHighPrecedence.link = arithmeticFactor.addr, arithemeticFactor.link = remainArithmeticTerm.addr}
+//remainArithmeticTerm $$ EPSILON @ {remainArithmeticTerm.addr = NULL}
+
+//arithmeticFactor $$ OP arithmeticExpression CL @ {arithmeticFactor.addr = arithmeticExpression.addr}
+//arithmeticFactor $$ var @ {arithmeticFactor.addr = var.addr}
+
+//operatorLowPrecedence $$ PLUS @ {operatorLowPrecedence.addr = PLUS.addr}
+//operatorLowPrecedence $$ MINUS @ {operatorLowPrecedence.addr = MINUS.addr}
+//operatorHighPrecedence $$ MUL @ {operatorHighPrecedence.addr = MUL.addr}
+//operatorHighPrecedence $$ DIV @ {operatorHighPrecedence.addr = DIV.addr}
+
+//var $$ ID matrixElement @ {var.addr = newNode(varid,ID.addr,matrixElement.addr)}
+
+//var $$ NUM @ {var.addr = NUM.addr}
+//var $$ RNUM @ {var.addr = RNUM.addr}
+//var $$ STR @ {var.addr = STR.addr}
+
+//var $$ matrix @ {var.addr = matrix.addr}
+
+//matrix $$ SQO rows SQC @ {matrix.addr = newNode(matrix,rows.addr)}
+//rows $$ row moreRows @ {row.link = moreRows.addr, rows.addr = row.addr}
+
+//moreRows $$ SEMICOLON row moreRows1 @ {row.link = moreRows1.addr, moreRows.addr = row.addr }
+//moreRows $$ EPSILON @ {moreRows.addr = NULL}
+
+//row $$ NUM moreNums @ {row.addr = newNode(row,NUM.addr,moreNums.addr)}
+//moreNums $$ COMMA NUM moreNums1 @ {NUM.link = moreNums1.addr,  moreNums.addr = NUM.addr}
+//moreNums $$ EPSILON @ {moreNums.addr = NULL}
+
+//matrixElement $$ SQO NUM COMMA NUM1 SQC @ {NUM.link = NUM1.addr, matrixElement.addr = NUM.addr }
+//matrixElement $$ EPSILON @ { matrixElement.addr = NULL}
+
+//funCallStmt $$ FUNID OP inputParameterList CL @  {funCallStmt.addr = newNode(functioncall,FUNID.addr,inputParameterList.addr)}
+
+//inputParameterList $$ var listVar @ {var.link = listVar.addr, inputParameterList.addr = var.addr}
+//inputParameterList $$ EPSILON @ {inputParameterList.addr = NULL}
+
+//listVar $$ COMMA var listVar1 @ {var.link = listVar1.addr, listVar.addr = var.addr}
+//listVar $$ EPSILON @ {listVar.addr = NULL}
+
+//ioStmt $$ READ OP ID CL @ { ioStmt.addr = newNode(iostmt,READ.addr,ID.addr)}
+//ioStmt $$ PRINT OP ID CL @ { ioStmt.addr = newNode(iostmt,PRINT.addr,ID.addr)}
+
+//ifStmt $$ IF OP booleanExpression CL stmt otherStmts elseStmt ENDIF @ {ifStmt.addr = newNode(ifcontruct,IF.addr,booleanExpression.addr,stmt.addr,otherStmts.addr,elseStmt.addr }
+#check for otherstmts having for siblings
+
+//elseStmt $$ ELSE stmt otherStmts @ { elseStmt.addr = newNode(elsecontruct,ELSE.addr,stmt.addr,otherStmts.addr) }
+//elseStmt $$ EPSILON @ {elseStmt.addr = NULL}
+
+//otherStmts $$ stmt otherStmts1 @ {stmt.link = otherStmts1.addr, otherStmts.addr = stmt.addr }
+//otherStmts $$ EPSILON @ {otherStmts.addr = NULL}
+
+//booleanExpression $$ OP booleanExpression1 CL logicalOp OP booleanExpression2 CL @ {booleanExpression.addr = newNode(boolexp,booleanExpression1.addr,logicalOp.addr,booleanExpression2.addr)}
+
+//booleanExpression $$ NOT OP booleanExpression1 CL @ {booleanExpression.addr = newNode(boolexp,NOT.addr,booleanExpression1.addr)}
+
+//booleanExpression $$ constrainedVars relationalOp constrainedVars1 @ {booleanExpression.addr = newNode(boolexp,constrainedVars.addr,relationlOp.addr,constrainedVars1.addr)}
+
+//constrainedVars $$ ID @ {constrainedVars.addr = ID.addr}
+//constrainedVars $$ NUM @ {constrainedVars.addr = NUM.addr}
+//constrainedVars $$ RNUM @ {constrainedVars.addr = RNUM.addr}
+//logicalOp $$ AND @ {logicalOp.addr = AND.addr}
+//logicalOp $$ OR @ {logicalOp.addr = OR.addr}
+//relationalOp $$ LT @ {relationalOp.addr = LT.addr}
+//relationalOp $$ LE @ {relationalOp.addr = LE.addr}
+//relationalOp $$ EQ @ {relationalOp.addr = EQ.addr}
+//relationalOp $$ NE @ {relationalOp.addr = NE.addr}
+//relationalOp $$ GT @ {relationalOp.addr = GT.addr}
+//relationalOp $$ GE @ {relationalOp.addr = GE.addr}
+EOF
+
+# Create new node for every terminal
